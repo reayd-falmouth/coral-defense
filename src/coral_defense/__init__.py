@@ -4,7 +4,7 @@ from pygame import display, image
 BASE_PATH = abspath(dirname(__file__))
 
 FONT_PATH = BASE_PATH + '/assets/fonts/'
-IMAGE_PATH = BASE_PATH + '/assets/images/'
+IMAGE_PATH = BASE_PATH + '/assets/img/'
 SOUND_PATH = BASE_PATH + '/assets/sounds/'
 
 # Colors (R, G, B)
