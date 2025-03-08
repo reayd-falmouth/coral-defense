@@ -27,9 +27,9 @@ YELLOW = (241, 255, 0)
 BLUE = (80, 255, 239)
 PURPLE = (203, 0, 255)
 RED = (237, 28, 36)
-
-SCREEN = display.set_mode((800, 600))
-FONT = FONT_PATH + "space_invaders.ttf"
+SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+SCREEN = display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+FONT = FONT_PATH + "m6x11plus.ttf"
 IMG_NAMES = [
     "ship",
     "mystery",

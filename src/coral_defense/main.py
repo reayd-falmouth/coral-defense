@@ -6,7 +6,7 @@ from random import choice
 from pygame import *
 from coral_defense import *
 from coral_defense.text import Text
-
+from coral_defense.shader import ShaderRenderer  # Import ShaderRenderer
 
 class Ship(sprite.Sprite):
     def __init__(self):
@@ -287,11 +287,15 @@ class Life(sprite.Sprite):
 
 
 class SpaceInvaders(object):
-    def __init__(self):
+    def __init__(self, shader_enabled: bool = True):
         # It seems, in Linux buffersize=512 is not enough, use 4096 to prevent:
         #   ALSA lib pcm.c:7963:(snd_pcm_recover) underrun occurred
         mixer.pre_init(44100, -16, 1, 4096)
         init()
+        if shader_enabled:
+            self.screen = display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), OPENGL | DOUBLEBUF)
+            self.screen.fill((0, 0, 0))  # Clear screen before drawing
+
         self.clock = time.Clock()
         self.caption = display.set_caption("Coral Defense")
         self.screen = SCREEN
@@ -301,14 +305,16 @@ class SpaceInvaders(object):
         self.gameOver = False
         # Counter for enemy starting position (increased each new round)
         self.enemyPosition = ENEMY_DEFAULT_POSITION
-        self.titleText = Text(FONT, 50, "Space Invaders", WHITE, 164, 155)
-        self.titleText2 = Text(FONT, 25, "Press any key to continue", WHITE, 201, 225)
-        self.gameOverText = Text(FONT, 50, "Game Over", WHITE, 250, 270)
-        self.nextRoundText = Text(FONT, 50, "Next Round", WHITE, 240, 270)
-        self.enemy1Text = Text(FONT, 25, "   =   10 pts", GREEN, 368, 270)
-        self.enemy2Text = Text(FONT, 25, "   =  20 pts", BLUE, 368, 320)
-        self.enemy3Text = Text(FONT, 25, "   =  30 pts", PURPLE, 368, 370)
-        self.enemy4Text = Text(FONT, 25, "   =  ?????", RED, 368, 420)
+        self.titleText = Text(FONT, 70, "Coral Defense", WHITE, ypos=155, center=True, screen_width=SCREEN_WIDTH)
+        self.titleText2 = Text(FONT, 25, "Press any key to continue", WHITE, ypos=225, center=True,
+                               screen_width=SCREEN_WIDTH)
+        self.gameOverText = Text(FONT, 50, "Game Over", WHITE, ypos=270, center=True, screen_width=SCREEN_WIDTH)
+        self.nextRoundText = Text(FONT, 50, "Next Round", WHITE, ypos=270, center=True, screen_width=SCREEN_WIDTH)
+        self.enemy1Text = Text(FONT, 25, "   =   10 pts", GREEN, ypos=270, center=True, screen_width=SCREEN_WIDTH)
+        self.enemy2Text = Text(FONT, 25, "   =  20 pts", BLUE, ypos=320, center=True, screen_width=SCREEN_WIDTH)
+        self.enemy3Text = Text(FONT, 25, "   =  30 pts", PURPLE, ypos=370, center=True, screen_width=SCREEN_WIDTH)
+        self.enemy4Text = Text(FONT, 25, "   =  ?????", RED, ypos=420, center=True, screen_width=SCREEN_WIDTH)
+
         self.scoreText = Text(FONT, 20, "Score", WHITE, 5, 5)
         self.livesText = Text(FONT, 20, "Lives ", WHITE, 640, 5)
 
@@ -316,6 +322,9 @@ class SpaceInvaders(object):
         self.life2 = Life(742, 3)
         self.life3 = Life(769, 3)
         self.livesGroup = sprite.Group(self.life1, self.life2, self.life3)
+
+        # Initialize ShaderRenderer
+        self.shader = ShaderRenderer(self.screen, enabled=shader_enabled)
 
     def reset(self, score):
         self.player = Ship()
@@ -614,10 +623,13 @@ class SpaceInvaders(object):
                 self.enemyPosition = ENEMY_DEFAULT_POSITION
                 self.create_game_over(currentTime)
 
-            display.update()
+            if self.shader.enabled:
+                self.shader.render(self.screen)  # Make sure the shader draws
+            else:
+                display.flip()
             self.clock.tick(60)
 
 
 if __name__ == "__main__":
-    game = SpaceInvaders()
+    game = SpaceInvaders(shader_enabled=True)
     game.run()
