@@ -3,9 +3,9 @@ from pygame import display, image
 
 BASE_PATH = abspath(dirname(__file__))
 
-FONT_PATH = BASE_PATH + '/fonts/'
-IMAGE_PATH = BASE_PATH + '/images/'
-SOUND_PATH = BASE_PATH + '/sounds/'
+FONT_PATH = BASE_PATH + '/assets/fonts/'
+IMAGE_PATH = BASE_PATH + '/assets/images/'
+SOUND_PATH = BASE_PATH + '/assets/sounds/'
 
 # Colors (R, G, B)
 WHITE = (255, 255, 255)
