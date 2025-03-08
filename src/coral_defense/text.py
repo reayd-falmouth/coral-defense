@@ -1,5 +1,6 @@
 from pygame import font
 
+
 class Text(object):
     def __init__(self, textFont, size, message, color, xpos, ypos):
         self.font = font.Font(textFont, size)
