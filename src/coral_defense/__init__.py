@@ -1,25 +1,24 @@
 import os
 import sys
-from os.path import dirname, abspath
 
 from pygame import display, image
 
-
-def resource_path(relative_path):
-    """ Get absolute path to resource for PyInstaller """
-    if getattr(sys, 'frozen', False):
-        # Running in PyInstaller bundle
-        base_path = sys._MEIPASS
+# ✅ Define ASSETS_DIR for both Pygbag and PyInstaller compatibility
+def get_assets_dir():
+    """Returns the correct path for assets, whether running as a script or PyInstaller package."""
+    if getattr(
+        sys, "frozen", False
+    ):  # PyInstaller sets `sys.frozen` when running from .exe
+        return os.path.join(sys._MEIPASS, "assets")
     else:
-        base_path = os.path.abspath(".")
+        return os.path.join(os.path.dirname(__file__), "assets")
 
-    return os.path.join(base_path, relative_path)
 
-BASE_PATH = abspath(dirname(__file__))
+BASE_PATH = get_assets_dir()
 
-FONT_PATH = BASE_PATH + "/assets/fonts/"
-IMAGE_PATH = BASE_PATH + "/assets/img/"
-SOUND_PATH = BASE_PATH + "/assets/sounds/"
+FONT_PATH = BASE_PATH + "/fonts/"
+IMAGE_PATH = BASE_PATH + "/img/"
+SOUND_PATH = BASE_PATH + "/sounds/"
 
 # Colors (R, G, B)
 WHITE = (255, 255, 255)
